@@ -12,9 +12,9 @@ class TestProxyClient(TestCase):
         self.client = Client()
         self.test_html = '''
             <h2>
-                <a href="https://habrahabr.ru/company/jugru/blog/327492/">№1 на Stack Overflow</a>
+                <a href="https://habrahabr.ru/company/jugru/blog/327492/">Чего ждёт Yandex? Или статус Yandex.Store</a>
                 <b>
-                     О развитии .NET как платформы
+                     Наверное, многие недоуменно наморщили лбы — что это такое, «Yandex.Store»?
                 </b>
             </h2>
            '''
@@ -27,7 +27,7 @@ class TestProxyClient(TestCase):
         title = bs_content.find(attrs={"class": "post__title-text"})  # post title
         self.assertEquals(
             ''.join(title.contents).strip(),
-            'Анализ™ публикаций™ на Хабрахабре™ за последние™ полгода™. Статистика™, полезные™ находки™ и рейтинги™'
+            'Анализ™ публикаций на Хабрахабре за последние полгода. Статистика, полезные находки и рейтинги'
         )
         self.assertEquals(response.status_code, 200)
 
@@ -43,9 +43,9 @@ class TestProxyClient(TestCase):
         new_content = re.sub('[\s+]', '', new_content)
         test_content = '''
         <h2>
-         <a href="http://127.0.0.1:8000/company/jugru/blog/327492/">№1 на Stack Overflow™</a>
+         <a href="http://127.0.0.1:8000/company/jugru/blog/327492/">Чего ждёт Yandex™? Или статус™ Yandex™.Store</a>
           <b>
-           О развитии™ .NET как платформы™
+           Наверное, многие™ недоуменно наморщили лбы — что это такое, «Yandex™.Store»?
           </b>
         </h2>
         '''

@@ -13,7 +13,7 @@ from django.views.generic import View
 # excluded tags
 EXCLUDED_TAGS = ['script', 'style', 'meta', 'html']
 # pattern what we need replace in content
-PATTERN_TO_REPLACE = re.compile(r'(?P<word>\w{6,})')
+PATTERN_TO_REPLACE = re.compile(r'(?P<word>\b\w{6}\b)')
 # for what we replace
 PATTERN_REPLACED = r'\g<word>™'
 
@@ -36,7 +36,8 @@ class ProxyView(View):
         self.params = request.GET
         self.host = request.get_host()
         response = super().dispatch(request, *args, **kwargs)
-        response.content = self.rewrite_content(response.content)
+        if 'fonts' not in request.path:
+            response.content = self.rewrite_content(response.content)
         return response
 
     def get_proxy_root(self):
@@ -89,8 +90,7 @@ class ProxyView(View):
                 node['href'] = node['href'].replace(self.base_url, self.get_proxy_root())
             if isinstance(node, bs4.Tag) and node.name not in EXCLUDED_TAGS:
                 self._rewrite_string(node)
-
-        return soup.prettify()
+        return str(soup)
 
     def get(self, request):
         """
